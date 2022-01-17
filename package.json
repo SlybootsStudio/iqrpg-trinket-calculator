@@ -1,0 +1,47 @@
+{
+  "name": "vue3-bootstrap5-boilerplate",
+  "version": "1.0.0",
+  "description": "vue3 bootstrap5 boilerplate",
+  "license": "Unlicense",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "deploy": "vue-cli-service build && gh-pages -d dist"
+  },
+  "contributors": [
+    {
+      "name": "Nick Breslin",
+      "email": "nickbreslin@gmail.com"
+    }
+  ],
+  "funding": {
+    "type": "patreon",
+    "url": "https://www.patreon.com/slybootsstudio/"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bootstrap": "^5.1.3",
+    "bootstrap-icons": "^1.7.2",
+    "bootswatch": "^5.1.3",
+    "core-js": "^3.12.1",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0-0",
+    "vuex": "^4.0.0-0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.13",
+    "@vue/cli-plugin-eslint": "~4.5.13",
+    "@vue/cli-plugin-router": "~4.5.13",
+    "@vue/cli-plugin-vuex": "~4.5.13",
+    "@vue/cli-service": "^4.5.13",
+    "@vue/compiler-sfc": "^3.0.11",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-vue": "^7.9.0",
+    "gh-pages": "^3.1.0",
+    "prettier": "^2.3.0"
+  }
+}
