@@ -129,6 +129,43 @@
           </div>
         </div>
       </div>
+
+      <div class="card mb-3">
+        <div class="card-header fw-bold mb-0 pb-0">Potions</div>
+        <div class="card-body pb-0">
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+              <div class="form-floating">
+                <select
+                  class="form-select form-select-lg text-capitalize"
+                  v-model="potionIndex"
+                >
+                  <option
+                    v-for="(potion, i) in potions"
+                    :key="i"
+                    v-bind:value="i"
+                  >
+                    <span class="text-capitalize">{{ potion }}</span>
+                  </option>
+                </select>
+                <label class="text-light fw-bold">Potion</label>
+              </div>
+            </div>
+            <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  v-model="globalBoost"
+                />
+                <label class="form-check-label" for="flexCheckDefault">
+                  Global Boost
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!--
     <div class="col-12 col-md-4 mb-3">
           <div class="form-floating">
@@ -288,6 +325,10 @@
             <div class="col">Resource</div>
             <div class="col">{{ resourceTotal.toFixed(1) }}</div>
           </div>
+          <div class="row">
+            <div class="col">Resource Boost</div>
+            <div class="col">{{ boostTotal.toFixed(1) }}%</div>
+          </div>
         </div>
         <div class="card-footer">
           <div class="row fw-bold h4">
@@ -297,10 +338,6 @@
         </div>
       </div>
       <div class="card card-body">
-        <div class="row">
-          <div class="col">Resource Boost</div>
-          <div class="col">{{ boostTotal.toFixed(1) }}%</div>
-        </div>
         <div class="row">
           <div class="col">Total Rune Boost</div>
           <div class="col">{{ runesTotal.toFixed(1) }}%</div>
@@ -433,12 +470,13 @@ export default {
       trinkets: [], // ask for 3 values (resource boost and base)
       premiumResource: 0,
       clanResourceTotem: 0,
-      potions: [], // training, minor
+      potionIndex: 0,
+      potions: ["none", "training (15%)", "minor (20%)"], // training, minor
       jcLevels: ["0-59", "60-79", "80-99", "100-119", "120-139", "140+"],
       jcLevel: 0,
       rcLevels: ["0-59", "60-79", "80-99", "100-119", "120-139", "140+"],
       rcLevel: 0,
-      globalBoost: 0
+      globalBoost: false
     };
   },
   computed: {
@@ -451,7 +489,10 @@ export default {
 
       total *= 1 + this.resourceTotal / 100;
       total *= 1 + this.boostTotal / 100;
-      total *= 1 + this.globalBoost / 100;
+
+      if (this.globalBoost) {
+        total *= 1.25;
+      }
       return total;
     },
     baseTotal() {
@@ -494,6 +535,13 @@ export default {
 
       total += this.trinketBoostTotal; // %
 
+      if (this.potionIndex == 1) {
+        total += 15;
+      }
+
+      if (this.potionIndex == 2) {
+        total += 20;
+      }
       //total += this.potion
       // training is 15%
       // minor is 20%
