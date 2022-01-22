@@ -277,35 +277,45 @@
       </div>
     </div>
     <div class="col">
-      <div class="card">
+      <div class="card mb-3">
         <div class="card-header fw-bold">Calculation</div>
         <div class="card-body">
-          <div class="row mb-1 border-bottom border-light pb-1">
+          <div class="row">
             <div class="col">Base</div>
-            <div class="col">{{ baseTotal }}</div>
+            <div class="col">{{ baseTotal.toFixed(1) }}</div>
           </div>
-          <div class="row mb-1 border-bottom border-light pb-1">
+          <div class="row">
             <div class="col">Resource</div>
-            <div class="col">{{ resourceTotal }}</div>
-          </div>
-          <div class="row mb-1 border-bottom border-light pb-1">
-            <div class="col">Resource Boost</div>
-            <div class="col">{{ boostTotal }}%</div>
-          </div>
-          <div class="row mb-1 border-bottom border-light pb-1">
-            <div class="col">Total Rune Boost</div>
-            <div class="col">{{ runesTotal }}%</div>
-          </div>
-          <div class="row mb-1 border-bottom border-light pb-1">
-            <div class="col">Total Jewel Boost</div>
-            <div class="col">{{ jewelsTotal }}%</div>
+            <div class="col">{{ resourceTotal.toFixed(1) }}</div>
           </div>
         </div>
         <div class="card-footer">
           <div class="row fw-bold h4">
             <div class="col">Total</div>
-            <div class="col">{{ totalOutput }}</div>
+            <div class="col">{{ totalOutput.toFixed(1) }}</div>
           </div>
+        </div>
+      </div>
+      <div class="card card-body">
+        <div class="row">
+          <div class="col">Resource Boost</div>
+          <div class="col">{{ boostTotal.toFixed(1) }}%</div>
+        </div>
+        <div class="row">
+          <div class="col">Total Rune Boost</div>
+          <div class="col">{{ runesTotal.toFixed(1) }}%</div>
+        </div>
+        <div class="row">
+          <div class="col">Total Jewel Boost</div>
+          <div class="col">{{ jewelsTotal.toFixed(1) }}%</div>
+        </div>
+        <div class="row">
+          <div class="col">Total Trinket Resource</div>
+          <div class="col">{{ trinketBaseTotal.toFixed(1) }}%</div>
+        </div>
+        <div class="row">
+          <div class="col">Total Trinket Boost</div>
+          <div class="col">{{ trinketBoostTotal.toFixed(1) }}%</div>
         </div>
       </div>
     </div>
@@ -442,19 +452,18 @@ export default {
       total *= 1 + this.resourceTotal / 100;
       total *= 1 + this.boostTotal / 100;
       total *= 1 + this.globalBoost / 100;
-      total = Math.round(total);
       return total;
     },
     baseTotal() {
       // (Level + Trinket (Base))
-      let base = 0;
+      let total = 0;
 
-      base += this.skillLevel / 2;
+      total += this.skillLevel / 2;
       // todo - factor in levels above 100;
 
-      base += this.trinketBaseTotal;
+      total += this.trinketBaseTotal;
 
-      return base;
+      return total;
     },
     resourceTotal() {
       // (Tool + Skill Shard + Heroic + Land + Jewels + Runes)
@@ -502,8 +511,6 @@ export default {
         total += this.getJcBoost(jewel);
       });
 
-      total = Math.round(total);
-
       return total;
     },
     trinketBaseTotal() {
@@ -512,8 +519,6 @@ export default {
       this.trinkets.map((trinket) => {
         total += trinket.resourceBase;
       });
-
-      total = Math.round(total);
 
       return total;
     },
@@ -524,8 +529,6 @@ export default {
         total += trinket.resourceBoost;
       });
 
-      total = Math.round(total);
-
       return total;
     },
     runesTotal() {
@@ -535,7 +538,6 @@ export default {
         total += this.runeResources[rune] * (1 + (this.rcLevel * 5) / 100);
       });
 
-      total = Math.round(total);
       return total;
     }
   },
@@ -549,7 +551,6 @@ export default {
       total +=
         this.jewelRarities[jewel.rarity] * (jewel.type + 1) * (bonus / 100);
 
-      total = Math.round(total);
       return total;
     },
     setSkillLevel(value) {
