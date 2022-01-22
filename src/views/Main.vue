@@ -215,7 +215,7 @@
               <Rune
                 :value="rune"
                 :tiers="runeTiers"
-                :boost="runeResources[rune]"
+                :boost="runeResources[rune] * (1 + (rcLevel * 5) / 100)"
                 @eInput="updateRune(i, $event)"
                 @remove="removeRune(i)"
               />
@@ -240,11 +240,8 @@
                 :type="jewel.type"
                 :rarities="jewelRarityLabels"
                 :types="jewelTypes"
-                :boost="
-                  Math.round(
-                    this.jewelRarities[jewel.rarity] * (jewel.type + 1)
-                  )
-                "
+                :crafted="jewel.crafted"
+                :boost="getJcBoost(jewel)"
                 @eInput="updateJewel(i, $event)"
                 @remove="removeJewel(i)"
               />
@@ -391,6 +388,7 @@ export default {
   },
   data() {
     return {
+      verbose: 0,
       skillLevel: 1,
       toolLevel: 1,
       skillShardResource: 0,
@@ -501,7 +499,7 @@ export default {
       let total = 0;
 
       this.jewels.map((jewel) => {
-        total += this.jewelRarities[jewel.rarity] * (jewel.type + 1);
+        total += this.getJcBoost(jewel);
       });
 
       total = Math.round(total);
@@ -534,7 +532,7 @@ export default {
       let total = 0;
 
       this.runes.map((rune) => {
-        total += this.runeResources[rune];
+        total += this.runeResources[rune] * (1 + (this.rcLevel * 5) / 100);
       });
 
       total = Math.round(total);
@@ -542,6 +540,18 @@ export default {
     }
   },
   methods: {
+    getJcBoost(jewel) {
+      let total = 0;
+      let bonus = 100;
+      if (jewel.crafted) {
+        bonus += this.jcLevel * 5;
+      }
+      total +=
+        this.jewelRarities[jewel.rarity] * (jewel.type + 1) * (bonus / 100);
+
+      total = Math.round(total);
+      return total;
+    },
     setSkillLevel(value) {
       this.skillLevel = value;
     },
@@ -572,7 +582,7 @@ export default {
       this.runes.splice(index, 1);
     },
     addJewel() {
-      this.jewels.push({ rarity: 0, type: 0 }); // common sapphire
+      this.jewels.push({ rarity: 0, type: 0, crafted: false }); // common sapphire
     },
     updateJewel(index, value) {
       console.log("Jewel Update", index, value);
