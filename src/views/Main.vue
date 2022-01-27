@@ -1,4 +1,9 @@
 <template>
+  <div class="alert alert-info mt-3">
+    <b>This is a work-in-progress</b>. This calculator demonstrates the
+    relationship between all the different factors for determining income, but
+    the equation is currently incomplete.
+  </div>
   <div class="row mt-3 mb-5">
     <div class="col-12 col-md-8">
       <div class="card mb-3">
@@ -70,6 +75,7 @@
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
               <FloatInput
                 :min="1"
+                :max="26"
                 :value="toolLevel"
                 label="Tool Level"
                 @eInput="setToolLevel($event)"
@@ -78,6 +84,8 @@
             <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
               <FloatInput
                 :min="1"
+                :max="100"
+                :limit="100"
                 :value="skillShardResource"
                 label="Skill Shard (Resources)"
                 @eInput="setSkillShardResource($event)"
@@ -419,6 +427,9 @@ If my goal was X million Per Hour / OR as a clan rush
 // lvl 120 - 20% boost - 3.84%
 // lvl 140 - 25%
 
+//
+//
+//
 import FloatInput from "@/components/FloatInput";
 
 import Rune from "@/components/Rune"; // type
@@ -441,7 +452,25 @@ export default {
       skillShardResource: 0,
       heroics: 0,
       land: 0,
-      landLevels: ["no land", "camp", "small village", "village"],
+      landLevels: [
+        "no land",
+        "camp",
+        "small village",
+        "village",
+        "large village",
+        "small town",
+        "town",
+        "large town",
+        "small city",
+        "city",
+        "large city",
+        "small kingdom",
+        "kingdom",
+        "large kingdom",
+        "small empire",
+        "empire",
+        "large empire"
+      ],
       runeTiers: [
         "no rune",
         "t1",
@@ -499,8 +528,7 @@ export default {
       // (Level + Trinket (Base))
       let total = 0;
 
-      total += this.skillLevel / 2;
-      // todo - factor in levels above 100;
+      total += this.skillLevelTotal;
 
       total += this.trinketBaseTotal;
 
@@ -550,7 +578,24 @@ export default {
       return total;
     },
     skillLevelTotal() {
-      return Math.round(this.skillLevel / 2);
+      /*
+      The base res is divided by 10 to get the resources amount,
+      and I believe a random number is generated between 1 and 10 to determine the extra resource.
+
+      so 550 = 5 with a 50% chance of 6.
+*/
+      let base = 550;
+      base += this.skillLevel * 40;
+
+      if (this.skillLevel > 90) {
+        const bonusLevels = this.skillLevel - 90;
+
+        base += Math.pow(bonusLevels, 2.15);
+      }
+
+      //base += Math.round(Math.random());
+
+      return base / 100;
     },
     jewelsTotal() {
       let total = 0;
