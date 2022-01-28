@@ -1,5 +1,6 @@
 <template>
   <div class="row">
+    <!--
     <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
       <FloatInput
         :step="0.1"
@@ -14,6 +15,15 @@
         :value="resourceBoost"
         label="Resource Boost"
         @eInput="eInput('resourceBoost', $event)"
+      />
+    </div>
+    -->
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+      <FloatInput
+        :step="0.1"
+        :value="dropBoost"
+        label="Drop Boost"
+        @eInput="eInput('dropBoost', $event)"
       />
     </div>
     <div class="col-12 col-sm-12 col-md-12 col-lg-4 mt-3 mb-3 text-end">
@@ -34,7 +44,8 @@ export default {
   },
   props: {
     resourceBase: Number, // float
-    resourceBoost: Number // float %
+    resourceBoost: Number, // float %
+    dropBoost: Number // float
   },
   methods: {
     eInput(prop, event) {
@@ -42,7 +53,8 @@ export default {
 
       let payload = {
         resourceBase: this.resourceBase, // is an int
-        resourceBoost: this.resourceBoost // is an int
+        resourceBoost: this.resourceBoost, // is an int
+        dropBoost: this.dropBoost // is an int
       };
 
       payload[prop] = value;
