@@ -1,93 +1,66 @@
 <template>
   <div class="row mt-3 mb-5">
     <div class="col-12 col-md-8">
-      <div class="card mb-3">
-        <div class="fw-bold card-header mb-0 pb-0">Skill Levels</div>
-        <div class="card-body pb-0">
-          <div class="row">
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
-              <FloatInput
-                :min="1"
-                :value="skillLevel"
-                label="Skill Level"
-                @eInput="setSkillLevel($event)"
-              />
-            </div>
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
-              <FloatInput
-                :min="0"
-                :value="treasureHunterLevel"
-                label="Treasure Hunter Level"
-                @eInput="setTreasureHunterLevel($event)"
-              />
-            </div>
+      <div class="alert alert-secondary mb-3 pb-1">
+        <div class="fw-bold mb-3">Skill Levels</div>
+        <div class="row mb-0 pb-0">
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+            <FloatInput
+              :min="1"
+              :value="skillLevel"
+              label="Skill Level"
+              @eInput="setSkillLevel($event)"
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+            <FloatInput
+              :min="0"
+              :value="treasureHunterLevel"
+              label="Treasure Hunter Level"
+              @eInput="setTreasureHunterLevel($event)"
+            />
+          </div>
 
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
-              <div class="form-floating">
-                <select
-                  class="form-select form-select-lg text-capitalize"
-                  v-model="land"
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+            <div class="form-floating">
+              <select
+                class="form-select form-select-lg text-capitalize"
+                v-model="land"
+              >
+                <option
+                  v-for="(land, i) in landLevels"
+                  :key="i"
+                  v-bind:value="i"
                 >
-                  <option
-                    v-for="(land, i) in landLevels"
-                    :key="i"
-                    v-bind:value="i"
-                  >
-                    <span class="text-capitalize">{{ land }} ({{ i }})</span>
-                  </option>
-                </select>
-                <label class="text-light fw-bold">Land</label>
-              </div>
+                  <span class="text-capitalize">{{ land }} ({{ i }})</span>
+                </option>
+              </select>
+              <label class="text-light fw-bold">Land</label>
             </div>
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
-              <FloatInput
-                :min="0"
-                :max="125"
-                :limit="125"
-                :value="premiumDrop"
-                label="Premium - Drop"
-                @eInput="setPremiumDrop($event)"
-              />
-            </div>
-            <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
-              <FloatInput
-                :min="0"
-                :value="clanDropTotem"
-                label="Clan - Drop Totem"
-                @eInput="setClanDropTotem($event)"
-              />
-            </div>
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+            <FloatInput
+              :min="0"
+              :max="125"
+              :limit="125"
+              :value="premiumDrop"
+              label="Premium - Drop"
+              @eInput="setPremiumDrop($event)"
+            />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+            <FloatInput
+              :min="0"
+              :value="clanDropTotem"
+              label="Clan - Drop Totem"
+              @eInput="setClanDropTotem($event)"
+            />
           </div>
         </div>
       </div>
 
-      <div v-if="0" class="card mt-3 mb-3">
-        <div class="fw-bold card-header mb-0 pb-0">Resource Boost</div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-12 col-md-4">
-              <div class="form-floating">
-                <input
-                  disabled
-                  type="number"
-                  min="0"
-                  class="form-control form-control-lg"
-                  :value="trinketDropBoostTotal"
-                />
-                <label class="text-light fw-bold">Trinket (Drop)</label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer d-flex justify-content-between">
-          <div><span class="fw-bold">Boost Total:</span> {{ boostTotal }}</div>
-          <div>
-            <a href="#trinkets" class="btn btn-secondary btn-sm">Add Trinket</a>
-          </div>
-        </div>
-      </div>
-      <div id="trinkets" class="card mb-3">
-        <div class="card-header d-flex justify-content-between">
+      <div class="alert alert-secondary mb-3 pb-1">
+        <div class="d-flex justify-content-between">
           <div class="fw-bold">Trinkets</div>
           <button
             class="btn btn-sm btn-primary"
@@ -97,7 +70,7 @@
             Add Trinket
           </button>
         </div>
-        <div class="card-body">
+        <div class="">
           <p v-if="trinkets.length == 0">You have no trinket identified.</p>
           <div v-for="(trinket, i) in trinkets" :key="i">
             <div class="mb-3">
@@ -114,25 +87,8 @@
       </div>
     </div>
     <div class="col">
-      <div class="card mb-3">
-        <div class="card-header fw-bold">Calculation</div>
-        <!--
-        <div class="card-body">
-          <div class="row">
-            <div class="col">trinketDropChanceTotal</div>
-            <div class="col">{{ trinketDropChanceTotal.toFixed(1) }}</div>
-          </div>
-          <div class="row">
-            <div class="col">dropBoostTotal</div>
-            <div class="col">{{ dropBoostTotal.toFixed(1) }}%</div>
-          </div>
-          <div class="row">
-            <div class="col">trinketDropBoostTotal (from trinkets)</div>
-            <div class="col">{{ trinketDropBoostTotal.toFixed(1) }}%</div>
-          </div>
-        </div>
-        -->
-        <div class="card-body text-center">
+      <div class="alert alert-secondary mb-3">
+        <div class="text-center">
           A trinket drop every<br />
           <span class="fw-bold h4">{{ totalOutput.toLocaleString() }}</span
           ><br />
