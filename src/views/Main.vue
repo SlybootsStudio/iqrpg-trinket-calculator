@@ -1,5 +1,5 @@
 <template>
-  <div class="row mt-3 mb-5">
+  <div class="row mt-3">
     <div class="col-12 col-md-8">
       <div class="alert alert-secondary mb-3 pb-1">
         <div class="fw-bold mb-3">Skill Levels</div>
@@ -12,15 +12,17 @@
               @eInput="setSkillLevel($event)"
             />
           </div>
+
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
             <FloatInput
               :min="0"
-              :value="treasureHunterLevel"
-              label="Treasure Hunter Level"
-              @eInput="setTreasureHunterLevel($event)"
+              :max="125"
+              :limit="125"
+              :value="premiumDrop"
+              label="Premium - Drop"
+              @eInput="setPremiumDrop($event)"
             />
           </div>
-
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
             <div class="form-floating">
               <select
@@ -41,20 +43,35 @@
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
             <FloatInput
               :min="0"
-              :max="125"
-              :limit="125"
-              :value="premiumDrop"
-              label="Premium - Drop"
-              @eInput="setPremiumDrop($event)"
+              :value="clanDropTotem"
+              label="Clan - Drop Totem"
+              @eInput="setClanDropTotem($event)"
             />
           </div>
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
             <FloatInput
               :min="0"
-              :value="clanDropTotem"
-              label="Clan - Drop Totem"
-              @eInput="setClanDropTotem($event)"
+              :value="treasureHunterLevel"
+              label="Treasure Hunter Level"
+              @eInput="setTreasureHunterLevel($event)"
             />
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+            <div class="form-floating">
+              <select
+                class="form-select form-select-lg text-capitalize"
+                v-model="treasureHunterRarity"
+              >
+                <option
+                  v-for="(rarity, i) in treasureHunterRarities"
+                  :key="i"
+                  v-bind:value="i"
+                >
+                  <span class="text-capitalize">{{ rarity }}</span>
+                </option>
+              </select>
+              <label class="text-light fw-bold">Treasure Hunter Rarity</label>
+            </div>
           </div>
         </div>
       </div>
@@ -97,11 +114,20 @@
       </div>
     </div>
   </div>
+  <hr />
+  <div class="row">
+    <div class="col">
+      <FloatInput
+        :value="actions"
+        label="Actions Per Day"
+        @eInput="setActions($event)"
+      />
+    </div>
+  </div>
+  <div class="mb-5"></div>
 </template>
 
 <script>
-// @ is an alias to /src
-
 import FloatInput from "@/components/FloatInput";
 
 import Trinket from "@/components/Trinket"; // boost, base
@@ -137,24 +163,23 @@ export default {
         "empire",
         "large empire"
       ],
+      treasureHunterRarities: [
+        "common (white)",
+        "uncommon (green)",
+        "rare (blue)",
+        "epic (yellow)",
+        "legendary (orange)",
+        "mythic (red)"
+      ],
       trinkets: [], // ask for 3 values (resource boost and base)
       premiumDrop: 0,
       clanDropTotem: 0,
-      treasureHunterLevel: 0
+      treasureHunterLevel: 0,
+      treasureHunterRarity: 0
     };
   },
   computed: {
     totalOutput() {
-      /*
-125000 / ( 1 +  trinketdropchance )  / (1 + dropboost )
-
-trinketdropchance : skillLevel + landLevel + TH
-boost: clan + premium + trinket
-
-
--->
-
-*/
       let total =
         125000 /
         (1 + this.trinketDropChanceTotal / 100) /
