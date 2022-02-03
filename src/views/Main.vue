@@ -12,7 +12,6 @@
               @eInput="setSkillLevel($event)"
             />
           </div>
-
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
             <FloatInput
               :min="0"
@@ -51,6 +50,8 @@
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
             <FloatInput
               :min="0"
+              :max="150"
+              :limit="150"
               :value="treasureHunterLevel"
               label="Treasure Hunter Level"
               @eInput="setTreasureHunterLevel($event)"
@@ -80,7 +81,7 @@
         <div class="d-flex justify-content-between">
           <div class="fw-bold">Trinkets</div>
           <button
-            class="btn btn-sm btn-primary"
+            class="btn btn-sm btn-primary fw-bold"
             v-if="trinkets.length < 3"
             @click="addTrinket()"
           >
@@ -111,12 +112,37 @@
           ><br />
           actions
         </div>
+        <br />
+        <div class="row">
+          <div class="col-7">Two trinket chance</div>
+          <div class="col">{{ twoTrinketChance.toLocaleString() }}%</div>
+        </div>
+        <div class="row mb-5">
+          <div class="col-7">Rarity increase chance</div>
+          <div class="col">{{ rarityChance.toLocaleString() }}%</div>
+        </div>
+        <div class="row">
+          <div class="col-7">Rare</div>
+          <div class="col">{{ rareChance.toLocaleString() }}%</div>
+        </div>
+        <div class="row">
+          <div class="col-7">Epic</div>
+          <div class="col">{{ epicChance.toLocaleString() }}%</div>
+        </div>
+        <div class="row">
+          <div class="col-7">Legendary</div>
+          <div class="col">{{ legendaryChance.toLocaleString() }}%</div>
+        </div>
+        <div class="row">
+          <div class="col-7">Mythic</div>
+          <div class="col">{{ mythicChance.toLocaleString() }}%</div>
+        </div>
       </div>
     </div>
   </div>
   <hr />
-  <div class="row">
-    <div class="col">
+  <div class="row mb-3">
+    <div class="col-3">
       <FloatInput
         :value="actions"
         label="Actions Per Day"
@@ -124,6 +150,29 @@
       />
     </div>
   </div>
+  <hr />
+  <p>
+    A trinket every {{ actionsPerTrinket.toLocaleString() }} actions, or
+    {{ (actionsPerTrinket / actions).toLocaleString() }} days.
+  </p>
+  <p>
+    A rare trinket every {{ actionsPerRare.toLocaleString() }} actions, or
+    {{ (actionsPerRare / actions).toLocaleString() }} days.
+  </p>
+  <p>
+    An epic trinket every {{ actionsPerEpic.toLocaleString() }} actions, or
+    {{ (actionsPerEpic / actions).toLocaleString() }} days.
+  </p>
+  <p>
+    A legendary trinket every
+    {{ actionsPerLegendary.toLocaleString() }} actions, or
+    {{ (actionsPerLegendary / actions).toLocaleString() }} days.
+  </p>
+  <p>
+    An mythic trinket every {{ actionsPerMythic.toLocaleString() }} actions, or
+    {{ (actionsPerMythic / actions).toLocaleString() }} days.
+  </p>
+
   <div class="mb-5"></div>
 </template>
 
@@ -131,7 +180,9 @@
 import FloatInput from "@/components/FloatInput";
 
 import Trinket from "@/components/Trinket"; // boost, base
-
+/*
+To show action rare, epic, legendary ONLY chance, subtract out the chance for the 'level up'
+*/
 export default {
   name: "Main",
   components: {
@@ -141,9 +192,9 @@ export default {
   data() {
     return {
       verbose: 0,
-      actions: 100000,
-      skillLevel: 1,
-      land: 0,
+      actions: 10000,
+      skillLevel: 100,
+      land: 10,
       landLevels: [
         "no land",
         "camp",
@@ -172,13 +223,90 @@ export default {
         "mythic (red)"
       ],
       trinkets: [], // ask for 3 values (resource boost and base)
-      premiumDrop: 0,
-      clanDropTotem: 0,
-      treasureHunterLevel: 0,
-      treasureHunterRarity: 0
+      premiumDrop: 100,
+      clanDropTotem: 30,
+      treasureHunterLevel: 100,
+      treasureHunterRarity: 5
     };
   },
   computed: {
+    monthofActions() {
+      return this.actions * 30;
+    },
+    actionsPerTrinket() {
+      let actions = this.totalOutput / (1 + this.twoTrinketChance / 100);
+      //actions *= this.rareChance / 100;
+      return Math.round(actions);
+    },
+    actionsPerRare() {
+      let actions = this.actionsPerTrinket;
+      actions /= this.rareChance / 100;
+      return Math.round(actions);
+    },
+    actionsPerEpic() {
+      let actions = this.actionsPerTrinket;
+      actions /= this.epicChance / 100;
+      return Math.round(actions);
+    },
+    actionsPerLegendary() {
+      let actions = this.actionsPerTrinket;
+      actions /= this.legendaryChance / 100;
+      return Math.round(actions);
+    },
+    actionsPerMythic() {
+      let actions = this.actionsPerTrinket;
+      actions /= this.mythicChance / 100;
+      return Math.round(actions);
+    },
+    twoTrinketChance() {
+      let chance = 0;
+      chance += this.treasureHunterLevel >= 50 ? 10 : 0;
+      chance += this.treasureHunterLevel >= 75 ? 20 : 0;
+      chance += this.treasureHunterLevel >= 100 ? 30 : 0;
+      chance += this.treasureHunterLevel >= 150 ? 40 : 0;
+
+      return chance;
+    },
+    rarityChance() {
+      let chance = 0;
+      chance += this.treasureHunterLevel * 0.05;
+      chance += this.treasureHunterRarity;
+
+      return chance;
+    },
+    rareChance() {
+      let chance = 100;
+      chance -= this.epicChance;
+      chance -= this.legendaryChance;
+      chance -= this.mythicChance;
+
+      return chance;
+    },
+    epicChance() {
+      let chance = 0;
+      chance += this.rarityChance;
+      chance -= this.legendaryChance;
+      chance -= this.mythicChance;
+      return chance;
+    },
+
+    legendaryChance() {
+      let chance = 0;
+      chance += Math.pow(this.rarityChance, 2);
+      chance = chance / 100;
+
+      chance -= this.mythicChance;
+
+      return chance;
+    },
+    mythicChance() {
+      let chance = 0;
+      chance += Math.pow(this.rarityChance, 3);
+
+      chance = chance / 10000;
+
+      return chance;
+    },
     totalOutput() {
       let total =
         125000 /
@@ -254,18 +382,11 @@ export default {
       //slice out trinket at index
       console.log("Remove Trinket", index);
       this.trinkets.splice(index, 1);
+    },
+    setActions(value) {
+      this.actions = value;
     }
   }
 };
-/*
-Rarity : TH (0.05) + Rarity (1)
--- roll 1d100, if successful, roll again. repeat until fail.
-
--- rare, epic, legendary, mythical runes.
-
-Actions Per Day
-Total Actions
-*/
+// "ActionsForMythicDrop/(((EpicDrop%/MythicDrop%)*EpicEssense)+((LegendaryDrop%/MythicDrop%)*LegendaryEssense)+((MythicDrop%/MythicDrop%)*MythicEssense))"
 </script>
-
-<style scoped></style>
