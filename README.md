@@ -1,5 +1,7 @@
-# vue3-bootstrap5-boilerplate
-Vue 3, Bootstrap 5, Bootstrap Icons project boilerplate
+# IQRPG Trinket Calculator
+
+![image](https://user-images.githubusercontent.com/267296/186961978-577fdc37-c458-4713-a876-9357caec286d.png)
+
 
 ## License
 
