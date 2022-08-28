@@ -9,3 +9,13 @@ body {
     background: #283339
 
 }
+
+
+.bg-yellow {
+  background: gold;
+  color:black !important;
+}
+
+.border-yellow {
+  border-color: gold !important;
+}

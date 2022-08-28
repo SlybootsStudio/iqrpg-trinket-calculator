@@ -1,33 +1,16 @@
 <template>
   <div class="row">
-    <!--
-    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
-      <FloatInput
-        :step="0.1"
-        :value="resourceBase"
-        label="Resource Base"
-        @eInput="eInput('resourceBase', $event)"
-      />
-    </div>
-    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
-      <FloatInput
-        :step="0.1"
-        :value="resourceBoost"
-        label="Resource Boost"
-        @eInput="eInput('resourceBoost', $event)"
-      />
-    </div>
-    -->
-    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
+    <div class="col-12 col-sm-6 d-flex">
       <FloatInput
         :step="0.1"
         :value="dropBoost"
-        label="Drop Boost"
+        label="Drop Boost (%)"
         @eInput="eInput('dropBoost', $event)"
       />
-    </div>
-    <div class="col-12 col-sm-12 col-md-12 col-lg-4 mt-3 mb-3 text-end">
-      <button class="btn btn-link text-warning" @click="removeTrinket()">
+      <button
+        class="btn btn-outline-warning bg-light text-warning ms-3"
+        @click="removeTrinket()"
+      >
         <i class="bi bi-trash"></i>
       </button>
     </div>

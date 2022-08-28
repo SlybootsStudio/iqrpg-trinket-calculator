@@ -3,6 +3,11 @@
     <div class="col-12 col-md-8">
       <div class="alert alert-secondary mb-3 pb-1">
         <div class="fw-bold mb-3">Skill Levels</div>
+        <div class="bg-dark text-light rounded p-3 mb-3">
+          <b>Skill Level</b> refers to the level of the action you are
+          performing: Battling, Mining, Woodcutting, Quarrying, Runecrafting,
+          Jewelrymaking, or Alchemy).
+        </div>
         <div class="row mb-0 pb-0">
           <div class="col-12 col-sm-12 col-md-6 col-lg-4 mb-3">
             <FloatInput
@@ -18,7 +23,7 @@
               :max="125"
               :limit="125"
               :value="premiumDrop"
-              label="Premium - Drop"
+              label="Premium - Drop Boost (%)"
               @eInput="setPremiumDrop($event)"
             />
           </div>
@@ -43,7 +48,7 @@
             <FloatInput
               :min="0"
               :value="clanDropTotem"
-              label="Clan - Drop Totem"
+              label="Clan - Drop Totem Level"
               @eInput="setClanDropTotem($event)"
             />
           </div>
@@ -80,6 +85,7 @@
       <div class="alert alert-secondary mb-3 pb-1">
         <div class="d-flex justify-content-between">
           <div class="fw-bold">Trinkets</div>
+
           <button
             class="btn btn-sm btn-primary fw-bold"
             v-if="trinkets.length < 3"
@@ -103,6 +109,19 @@
           </div>
         </div>
       </div>
+      <div>
+        <div class="alert alert-secondary mb-3 pb-3">
+          <div class="bg-dark text-light rounded p-3 mb-3">
+            Enter the typical amount of actions per day that your character
+            performs.
+          </div>
+          <FloatInput
+            :value="actions"
+            label="Actions Per Day"
+            @eInput="setActions($event)"
+          />
+        </div>
+      </div>
     </div>
     <div class="col">
       <div class="alert alert-secondary mb-3">
@@ -122,57 +141,73 @@
           <div class="col">{{ rarityChance.toLocaleString() }}%</div>
         </div>
         <div class="row">
-          <div class="col-7">Rare</div>
+          <div class="col-7">
+            <span class="badge border border-primary rounded border-3"
+              >Rare</span
+            >
+          </div>
           <div class="col">{{ rareChance.toLocaleString() }}%</div>
         </div>
-        <div class="row">
-          <div class="col-7">Epic</div>
+        <div class="row mt-2">
+          <div class="col-7">
+            <span class="badge border border-yellow rounded border-3"
+              >Epic</span
+            >
+          </div>
           <div class="col">{{ epicChance.toLocaleString() }}%</div>
         </div>
-        <div class="row">
-          <div class="col-7">Legendary</div>
+        <div class="row mt-2">
+          <div class="col-7">
+            <span class="badge border border-warning rounded border-3"
+              >Legendary</span
+            >
+          </div>
           <div class="col">{{ legendaryChance.toLocaleString() }}%</div>
         </div>
-        <div class="row">
-          <div class="col-7">Mythic</div>
+        <div class="row mt-2">
+          <div class="col-7">
+            <span class="badge border border-danger rounded border-3"
+              >Mythic</span
+            >
+          </div>
           <div class="col">{{ mythicChance.toLocaleString() }}%</div>
         </div>
       </div>
+      <!-- Actions By Type Per Day -->
+      <div class="alert alert-secondary">
+        <p>
+          Based on <b>{{ actions.toLocaleString() }}</b> actions per day, you
+          should expect a trinket every
+          {{ actionsPerTrinket.toLocaleString() }} actions, or
+          {{ (actionsPerTrinket / actions).toLocaleString() }} days.
+        </p>
+        <p>
+          <span class="badge border border-primary rounded border-3">Rare</span>
+          every {{ actionsPerRare.toLocaleString() }} actions, or
+          {{ (actionsPerRare / actions).toLocaleString() }} days.
+        </p>
+        <p>
+          <span class="badge border border-yellow rounded border-3">Epic</span>
+          every {{ actionsPerEpic.toLocaleString() }} actions, or
+          {{ (actionsPerEpic / actions).toLocaleString() }} days.
+        </p>
+        <p>
+          <span class="badge border border-warning rounded border-3"
+            >Legendary</span
+          >
+          every {{ actionsPerLegendary.toLocaleString() }} actions, or
+          {{ (actionsPerLegendary / actions).toLocaleString() }} days.
+        </p>
+        <p>
+          <span class="badge border border-danger rounded border-3"
+            >Mythic</span
+          >
+          every {{ actionsPerMythic.toLocaleString() }} actions, or
+          {{ (actionsPerMythic / actions).toLocaleString() }} days.
+        </p>
+      </div>
     </div>
   </div>
-  <hr />
-  <div class="row mb-3">
-    <div class="col-3">
-      <FloatInput
-        :value="actions"
-        label="Actions Per Day"
-        @eInput="setActions($event)"
-      />
-    </div>
-  </div>
-  <hr />
-  <p>
-    A trinket every {{ actionsPerTrinket.toLocaleString() }} actions, or
-    {{ (actionsPerTrinket / actions).toLocaleString() }} days.
-  </p>
-  <p>
-    A rare trinket every {{ actionsPerRare.toLocaleString() }} actions, or
-    {{ (actionsPerRare / actions).toLocaleString() }} days.
-  </p>
-  <p>
-    An epic trinket every {{ actionsPerEpic.toLocaleString() }} actions, or
-    {{ (actionsPerEpic / actions).toLocaleString() }} days.
-  </p>
-  <p>
-    A legendary trinket every
-    {{ actionsPerLegendary.toLocaleString() }} actions, or
-    {{ (actionsPerLegendary / actions).toLocaleString() }} days.
-  </p>
-  <p>
-    An mythic trinket every {{ actionsPerMythic.toLocaleString() }} actions, or
-    {{ (actionsPerMythic / actions).toLocaleString() }} days.
-  </p>
-
   <div class="mb-5"></div>
 </template>
 
@@ -193,8 +228,8 @@ export default {
     return {
       verbose: 0,
       actions: 10000,
-      skillLevel: 100,
-      land: 10,
+      skillLevel: 1,
+      land: 0,
       landLevels: [
         "no land",
         "camp",
@@ -223,16 +258,13 @@ export default {
         "mythic (red)"
       ],
       trinkets: [], // ask for 3 values (resource boost and base)
-      premiumDrop: 100,
-      clanDropTotem: 30,
-      treasureHunterLevel: 100,
-      treasureHunterRarity: 5
+      premiumDrop: 0,
+      clanDropTotem: 0,
+      treasureHunterLevel: 0,
+      treasureHunterRarity: 0
     };
   },
   computed: {
-    monthofActions() {
-      return this.actions * 30;
-    },
     actionsPerTrinket() {
       let actions = this.totalOutput / (1 + this.twoTrinketChance / 100);
       //actions *= this.rareChance / 100;
@@ -390,3 +422,13 @@ export default {
 };
 // "ActionsForMythicDrop/(((EpicDrop%/MythicDrop%)*EpicEssense)+((LegendaryDrop%/MythicDrop%)*LegendaryEssense)+((MythicDrop%/MythicDrop%)*MythicEssense))"
 </script>
+
+<style scoped>
+/*
+.badge {
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 0.4px;
+  -webkit-text-stroke-color: black;
+}
+*/
+</style>
