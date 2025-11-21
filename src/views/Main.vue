@@ -293,9 +293,10 @@ export default {
     twoTrinketChance() {
       let chance = 0;
       chance += this.treasureHunterLevel >= 50 ? 10 : 0;
-      chance += this.treasureHunterLevel >= 75 ? 20 : 0;
-      chance += this.treasureHunterLevel >= 100 ? 30 : 0;
-      chance += this.treasureHunterLevel >= 150 ? 40 : 0;
+      chance += this.treasureHunterLevel >= 75 ? 20 : 0; // 30
+      chance += this.treasureHunterLevel >= 100 ? 30 : 0; // 60
+      chance += this.treasureHunterLevel >= 125 ? 20 : 0; // 80
+      chance += this.treasureHunterLevel >= 150 ? 20 : 0; // 100
 
       return chance;
     },
