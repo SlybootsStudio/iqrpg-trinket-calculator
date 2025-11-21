@@ -1,7 +1,6 @@
 # IQRPG Trinket Calculator
 
-![image](https://user-images.githubusercontent.com/267296/186961978-577fdc37-c458-4713-a876-9357caec286d.png)
-
+<img width="3006" height="1568" alt="image" src="https://github.com/user-attachments/assets/8757f4ea-823e-4c9b-9730-8adc26e2717f" />
 
 ## License
 
