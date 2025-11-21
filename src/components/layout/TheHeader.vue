@@ -1,5 +1,5 @@
 <template>
-  <div class="h1 border-bottom mb-5">{{ title }}</div>
+  <div class="fs-3 border-bottom my-5">{{ title }}</div>
 </template>
 
 <script>
